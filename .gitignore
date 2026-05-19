@@ -11,6 +11,8 @@ build/
 .env
 .env.*
 !.env.example
+backend/.venv*/
+backend/.tmp/
 
 # OS / editor
 .DS_Store
