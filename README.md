@@ -2,6 +2,10 @@
 
 English phrase learning app.
 
+## Project notes
+
+- See `ISSUES.md` for pending implementation items, including planned MySQL support.
+
 ## Structure
 
 - `frontend`
