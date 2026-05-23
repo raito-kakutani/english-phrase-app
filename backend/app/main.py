@@ -20,12 +20,6 @@ class PhraseSubmission(BaseModel):
     japanese: str
     english: str
 
-
-@app.get("/api/health")
-def healthcheck() -> dict[str, str]:
-    return {"status": "ok"}
-
-
 @app.post("/api/phrases")
 def submit_phrases(payload: PhraseSubmission) -> dict[str, int | str]:
     try:
@@ -35,3 +29,5 @@ def submit_phrases(payload: PhraseSubmission) -> dict[str, int | str]:
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
