@@ -3,11 +3,29 @@ const englishInput = document.getElementById("english-input");
 const submitButton = document.getElementById("submit-button");
 const result = document.getElementById("result");
 
+function hasRequiredInputs() {
+  return (
+    japaneseInput.value.trim() !== "" &&
+    englishInput.value.trim() !== ""
+  );
+}
+
+function updateSubmitButtonState() {
+  submitButton.disabled = !hasRequiredInputs();
+}
+
 async function submitPhrases() {
   const japanese = japaneseInput.value.trim();
   const english = englishInput.value.trim();
 
-  result.textContent = "Submitting...";
+  if (!hasRequiredInputs()) {
+    updateSubmitButtonState();
+    return;
+  }
+
+  if (result) {
+    result.textContent = "Submitting...";
+  }
   submitButton.disabled = true;
 
   try {
@@ -28,12 +46,19 @@ async function submitPhrases() {
       throw new Error(data.detail || `HTTP ${response.status}`);
     }
 
-    result.textContent = `Submitted: Japanese ${data.japanese_length} chars / English ${data.english_length} chars`;
+    if (result) {
+      result.textContent = `Submitted: Japanese ${data.japanese_length} chars / English ${data.english_length} chars`;
+    }
   } catch (error) {
-    result.textContent = `Submit failed: ${error.message}`;
+    if (result) {
+      result.textContent = `Submit failed: ${error.message}`;
+    }
   } finally {
-    submitButton.disabled = false;
+    updateSubmitButtonState();
   }
 }
 
+japaneseInput.addEventListener("input", updateSubmitButtonState);
+englishInput.addEventListener("input", updateSubmitButtonState);
 submitButton.addEventListener("click", submitPhrases);
+updateSubmitButtonState();
