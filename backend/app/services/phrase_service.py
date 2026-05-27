@@ -1,30 +1,7 @@
-from pathlib import Path
-import os
+from app.db import create_connection
 
 
 DEFAULT_USER_ID = 1
-ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
-
-
-def _load_env_file() -> dict[str, str]:
-    if not ENV_PATH.exists():
-        return {}
-
-    values: dict[str, str] = {}
-    for line in ENV_PATH.read_text(encoding="utf-8").splitlines():
-        stripped_line = line.strip()
-        if not stripped_line or stripped_line.startswith("#") or "=" not in stripped_line:
-            continue
-
-        key, value = stripped_line.split("=", 1)
-        values[key.strip()] = value.strip()
-
-    return values
-
-
-def _get_setting(key: str, default: str) -> str:
-    env_values = _load_env_file()
-    return os.getenv(key) or env_values.get(key) or default
 
 
 def process_phrase_submission(japanese: str, english: str) -> dict[str, int | str]:
@@ -34,26 +11,12 @@ def process_phrase_submission(japanese: str, english: str) -> dict[str, int | st
     if not normalized_japanese or not normalized_english:
         raise ValueError("Both Japanese and English are required.")
 
+    connection = create_connection()
+    cursor = None
+
     try:
         import mysql.connector
-    except ImportError as exc:
-        raise RuntimeError(
-            "mysql-connector-python is not installed. Run `pip install -r requirements.txt`."
-        ) from exc
 
-    try:
-        connection = mysql.connector.connect(
-            host=_get_setting("MYSQL_HOST", "127.0.0.1"),
-            port=int(_get_setting("MYSQL_PORT", "3307")),
-            user=_get_setting("MYSQL_USER", "app_user"),
-            password=_get_setting("MYSQL_PASSWORD", "english_app"),
-            database=_get_setting("MYSQL_DATABASE", "english_app"),
-        )
-    except mysql.connector.Error as exc:
-        raise RuntimeError(f"Failed to connect to MySQL: {exc}") from exc
-
-    cursor = None
-    try:
         cursor = connection.cursor()
         cursor.execute(
             """
@@ -75,3 +38,51 @@ def process_phrase_submission(japanese: str, english: str) -> dict[str, int | st
         if cursor is not None:
             cursor.close()
         connection.close()
+
+
+def _get_phrase_by_day_offset(day_offset: int, empty_message: str) -> dict[str, int | str | None]:
+    connection = create_connection()
+    cursor = None
+
+    try:
+        import mysql.connector
+
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute(
+            """
+            SELECT id, japanese_text, english_text, created_at
+            FROM phrases
+            WHERE user_id = %s
+              AND DATE(created_at) = DATE_ADD(CURRENT_DATE(), INTERVAL %s DAY)
+            ORDER BY created_at DESC, id DESC
+            LIMIT 1
+            """,
+            (DEFAULT_USER_ID, day_offset),
+        )
+        phrase = cursor.fetchone()
+
+        if phrase is None:
+            raise ValueError(empty_message)
+
+        return {
+            "id": phrase["id"],
+            "japanese_text": phrase["japanese_text"],
+            "english_text": phrase["english_text"],
+            "created_at": phrase["created_at"].isoformat()
+            if phrase["created_at"] is not None
+            else None,
+        }
+    except mysql.connector.Error as exc:
+        raise RuntimeError(f"Failed to load phrase: {exc}") from exc
+    finally:
+        if cursor is not None:
+            cursor.close()
+        connection.close()
+
+
+def get_today_phrase() -> dict[str, int | str | None]:
+    return _get_phrase_by_day_offset(0, "No phrase was created today.")
+
+
+def get_yesterday_phrase() -> dict[str, int | str | None]:
+    return _get_phrase_by_day_offset(-1, "No phrase was created yesterday.")
