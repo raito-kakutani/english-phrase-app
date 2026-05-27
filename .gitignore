@@ -14,6 +14,10 @@ build/
 backend/.venv*/
 backend/.tmp/
 
+# Python cache
+__pycache__/
+*.py[cod]
+
 # OS / editor
 .DS_Store
 Thumbs.db

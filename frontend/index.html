@@ -10,25 +10,36 @@
     <main class="app">
       <aside class="sidebar">
         <p class="eyebrow">Menu</p>
-        <nav class="menu" aria-label="Date menu">
-          <button class="menu-item" type="button">&#20170;&#26085;</button>
-          <button class="menu-item" type="button">&#26152;&#26085;</button>
+        <nav class="menu" aria-label="Screen menu">
+          <button class="menu-item is-active" type="button" data-screen-target="phrase-form">
+            フレーズ
+          </button>
+          <button class="menu-item" type="button" data-screen-target="today-phrase">
+            今日
+          </button>
+          <button class="menu-item" type="button" data-screen-target="yesterday-phrase">
+            昨日
+          </button>
         </nav>
       </aside>
-      <section class="panel">
+      <section
+        id="phrase-form"
+        class="panel screen is-active"
+        data-screen="phrase-form"
+      >
         <p class="eyebrow">English Phrase App</p>
         <div class="input-row">
           <label class="field">
-            <span class="field-label">&#26085;&#26412;&#35486;</span>
+            <span class="field-label">日本語</span>
             <textarea
               id="japanese-input"
               class="text-input"
-              placeholder="&#26085;&#26412;&#35486;&#12434;&#20837;&#21147;"
+              placeholder="日本語を入力"
               rows="8"
             ></textarea>
           </label>
           <label class="field">
-            <span class="field-label">&#33521;&#35486;</span>
+            <span class="field-label">英語</span>
             <textarea
               id="english-input"
               class="text-input"
@@ -40,6 +51,74 @@
         <div class="actions">
           <button id="submit-button" type="button">Enter</button>
         </div>
+        <p id="result" class="result" aria-live="polite"></p>
+      </section>
+      <section id="today-phrase" class="panel screen" data-screen="today-phrase" hidden>
+        <p class="eyebrow">Today</p>
+        <div class="today-header">
+          <h1 class="screen-title">今日のフレーズ</h1>
+          <div class="tab-row" role="tablist" aria-label="Phrase language tabs">
+            <button
+              id="show-japanese-button"
+              class="tab-button is-active"
+              type="button"
+              role="tab"
+              aria-selected="true"
+            >
+              日本語
+            </button>
+            <button
+              id="show-english-button"
+              class="tab-button"
+              type="button"
+              role="tab"
+              aria-selected="false"
+            >
+              英語を表示
+            </button>
+          </div>
+        </div>
+        <div class="phrase-card">
+          <p id="today-phrase-label" class="phrase-label">日本語</p>
+          <p id="today-phrase-text" class="phrase-text">今日のフレーズを読み込み中...</p>
+        </div>
+        <p id="today-phrase-meta" class="result" aria-live="polite"></p>
+      </section>
+      <section
+        id="yesterday-phrase"
+        class="panel screen"
+        data-screen="yesterday-phrase"
+        hidden
+      >
+        <p class="eyebrow">Yesterday</p>
+        <div class="today-header">
+          <h1 class="screen-title">昨日のフレーズ</h1>
+          <div class="tab-row" role="tablist" aria-label="Yesterday phrase language tabs">
+            <button
+              id="show-yesterday-japanese-button"
+              class="tab-button is-active"
+              type="button"
+              role="tab"
+              aria-selected="true"
+            >
+              日本語
+            </button>
+            <button
+              id="show-yesterday-english-button"
+              class="tab-button"
+              type="button"
+              role="tab"
+              aria-selected="false"
+            >
+              英語を表示
+            </button>
+          </div>
+        </div>
+        <div class="phrase-card">
+          <p id="yesterday-phrase-label" class="phrase-label">日本語</p>
+          <p id="yesterday-phrase-text" class="phrase-text">昨日のフレーズを読み込み中...</p>
+        </div>
+        <p id="yesterday-phrase-meta" class="result" aria-live="polite"></p>
       </section>
     </main>
     <script src="./script.js"></script>
