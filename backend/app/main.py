@@ -2,10 +2,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from app.services.phrase_service import (
-    get_phrases_by_day_offset,
-    process_phrase_submission,
-)
+from backend.app.services.phrase_save import process_phrase_submission
+from backend.app.services.phrase_get import get_phrases_by_day_offset
 
 
 app = FastAPI(title="English Phrase App API")
