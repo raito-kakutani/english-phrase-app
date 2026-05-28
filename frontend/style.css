@@ -74,36 +74,23 @@ body {
   color: #7a5c2e;
 }
 
-h1 {
-  margin: 0 0 12px;
-  font-size: clamp(2rem, 5vw, 2.8rem);
-}
-
-.screen-title {
-  margin: 0;
-}
-
-.description {
-  margin: 0 0 24px;
-  line-height: 1.6;
-}
-
 .input-row {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
   gap: 16px;
-  align-items: end;
+  align-items: start;
   margin-bottom: 16px;
+}
+
+.field {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 8px;
 }
 
 .actions {
   display: flex;
   justify-content: flex-end;
-}
-
-.field {
-  display: grid;
-  gap: 8px;
 }
 
 .field-label {
@@ -144,58 +131,45 @@ textarea.text-input {
   background: #1d5c4d;
 }
 
-.today-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.tab-row {
-  display: inline-flex;
-  padding: 4px;
-  border-radius: 999px;
-  background: #edf3f7;
-  gap: 4px;
-}
-
-.tab-button {
-  border: 0;
-  border-radius: 999px;
-  padding: 12px 18px;
-  font: inherit;
-  font-weight: 700;
-  color: #355067;
-  background: transparent;
-  cursor: pointer;
-}
-
-.tab-button.is-active {
-  color: #fff;
-  background: #1d5c4d;
-}
-
-.phrase-card {
-  min-height: 280px;
-  padding: 28px;
-  border-radius: 20px;
-  background: linear-gradient(145deg, #f9fbfd, #edf3f7);
-  border: 1px solid rgba(53, 80, 103, 0.12);
-}
-
-.phrase-label {
-  margin: 0 0 14px;
-  font-size: 0.95rem;
+.phrase-count {
+  margin: 0 auto 0 0;
   font-weight: 700;
   color: #355067;
 }
 
 .phrase-text {
   margin: 0;
+  min-height: 220px;
   font-size: clamp(1.6rem, 4vw, 2.5rem);
   line-height: 1.5;
   white-space: pre-wrap;
+}
+
+.phrase-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.secondary-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 18px;
+  font: inherit;
+  font-weight: 700;
+  color: #fff;
+  background: #355067;
+  cursor: pointer;
+}
+
+.secondary-button:last-child {
+  background: #1d5c4d;
+}
+
+.secondary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
 .result {
@@ -210,19 +184,14 @@ textarea.text-input {
   }
 
   .input-row {
-    grid-template-columns: 1fr;
-  }
-
-  .today-header {
     flex-direction: column;
-    align-items: stretch;
   }
 
-  .tab-row {
-    width: 100%;
+  .phrase-actions {
+    justify-content: stretch;
   }
 
-  .tab-button {
+  .secondary-button {
     flex: 1;
   }
 }

@@ -40,7 +40,10 @@ def process_phrase_submission(japanese: str, english: str) -> dict[str, int | st
         connection.close()
 
 
-def _get_phrase_by_day_offset(day_offset: int, empty_message: str) -> dict[str, int | str | None]:
+def get_phrases_by_day_offset(
+    day_offset: int,
+    empty_message: str,
+) -> list[dict[str, int | str | None]]:
     connection = create_connection()
     cursor = None
 
@@ -54,35 +57,29 @@ def _get_phrase_by_day_offset(day_offset: int, empty_message: str) -> dict[str, 
             FROM phrases
             WHERE user_id = %s
               AND DATE(created_at) = DATE_ADD(CURRENT_DATE(), INTERVAL %s DAY)
-            ORDER BY created_at DESC, id DESC
-            LIMIT 1
+            ORDER BY created_at ASC, id ASC
             """,
             (DEFAULT_USER_ID, day_offset),
         )
-        phrase = cursor.fetchone()
+        phrases = cursor.fetchall()
 
-        if phrase is None:
+        if not phrases:
             raise ValueError(empty_message)
 
-        return {
-            "id": phrase["id"],
-            "japanese_text": phrase["japanese_text"],
-            "english_text": phrase["english_text"],
-            "created_at": phrase["created_at"].isoformat()
-            if phrase["created_at"] is not None
-            else None,
-        }
+        return [
+            {
+                "id": phrase["id"],
+                "japanese_text": phrase["japanese_text"],
+                "english_text": phrase["english_text"],
+                "created_at": phrase["created_at"].isoformat()
+                if phrase["created_at"] is not None
+                else None,
+            }
+            for phrase in phrases
+        ]
     except mysql.connector.Error as exc:
         raise RuntimeError(f"Failed to load phrase: {exc}") from exc
     finally:
         if cursor is not None:
             cursor.close()
         connection.close()
-
-
-def get_today_phrase() -> dict[str, int | str | None]:
-    return _get_phrase_by_day_offset(0, "No phrase was created today.")
-
-
-def get_yesterday_phrase() -> dict[str, int | str | None]:
-    return _get_phrase_by_day_offset(-1, "No phrase was created yesterday.")

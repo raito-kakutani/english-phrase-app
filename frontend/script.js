@@ -8,33 +8,29 @@ const screens = document.querySelectorAll("[data-screen]");
 const phraseViews = {
   "today-phrase": {
     endpoint: "http://127.0.0.1:8000/api/phrases/today",
-    loadingMessage: "今日のフレーズを読み込み中...",
-    labelElement: document.getElementById("today-phrase-label"),
-    textElement: document.getElementById("today-phrase-text"),
-    metaElement: document.getElementById("today-phrase-meta"),
-    showJapaneseButton: document.getElementById("show-japanese-button"),
+    countElement: document.getElementById("today-phrase-count"),
+    japaneseElement: document.getElementById("today-phrase-text"),
+    englishElement: document.getElementById("today-phrase-english"),
     showEnglishButton: document.getElementById("show-english-button"),
+    nextButton: document.getElementById("next-today-phrase-button"),
     state: {
-      japaneseText: "",
-      englishText: "",
-      createdAt: "",
-      visibleLanguage: "japanese",
+      phrases: [],
+      currentIndex: 0,
+      isEnglishVisible: false,
       hasPhrase: false,
     },
   },
   "yesterday-phrase": {
     endpoint: "http://127.0.0.1:8000/api/phrases/yesterday",
-    loadingMessage: "昨日のフレーズを読み込み中...",
-    labelElement: document.getElementById("yesterday-phrase-label"),
-    textElement: document.getElementById("yesterday-phrase-text"),
-    metaElement: document.getElementById("yesterday-phrase-meta"),
-    showJapaneseButton: document.getElementById("show-yesterday-japanese-button"),
+    countElement: document.getElementById("yesterday-phrase-count"),
+    japaneseElement: document.getElementById("yesterday-phrase-text"),
+    englishElement: document.getElementById("yesterday-phrase-english"),
     showEnglishButton: document.getElementById("show-yesterday-english-button"),
+    nextButton: document.getElementById("next-yesterday-phrase-button"),
     state: {
-      japaneseText: "",
-      englishText: "",
-      createdAt: "",
-      visibleLanguage: "japanese",
+      phrases: [],
+      currentIndex: 0,
+      isEnglishVisible: false,
       hasPhrase: false,
     },
   },
@@ -48,58 +44,48 @@ function updateSubmitButtonState() {
   submitButton.disabled = !hasRequiredInputs();
 }
 
-function formatCreatedAt(value) {
-  if (!value) {
-    return "";
-  }
-
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return "";
-  }
-
-  return date.toLocaleString("ja-JP");
+function getCurrentPhrase(view) {
+  return view.state.phrases[view.state.currentIndex] ?? null;
 }
 
 function renderPhrase(view) {
   if (!view.state.hasPhrase) {
-    view.labelElement.textContent = "日本語";
-    view.showJapaneseButton.classList.add("is-active");
-    view.showJapaneseButton.setAttribute("aria-selected", "true");
-    view.showEnglishButton.classList.remove("is-active");
-    view.showEnglishButton.setAttribute("aria-selected", "false");
+    view.countElement.textContent = "";
+    view.japaneseElement.textContent = "";
+    view.englishElement.textContent = "";
+    view.englishElement.hidden = true;
+    view.showEnglishButton.textContent = "英語表示";
+    view.showEnglishButton.disabled = true;
+    view.nextButton.disabled = true;
     return;
   }
 
-  const showJapanese = view.state.visibleLanguage === "japanese";
+  const phrase = getCurrentPhrase(view);
+  const total = view.state.phrases.length;
+  const current = view.state.currentIndex + 1;
 
-  view.labelElement.textContent = showJapanese
-    ? "日本語"
-    : "英語";
-  view.textElement.textContent = showJapanese
-    ? view.state.japaneseText
-    : view.state.englishText;
-
-  view.showJapaneseButton.classList.toggle("is-active", showJapanese);
-  view.showJapaneseButton.setAttribute("aria-selected", String(showJapanese));
-  view.showEnglishButton.classList.toggle("is-active", !showJapanese);
-  view.showEnglishButton.setAttribute("aria-selected", String(!showJapanese));
+  view.countElement.textContent = `${current} / ${total}`;
+  view.japaneseElement.textContent = phrase.japanese_text;
+  view.englishElement.textContent = phrase.english_text;
+  view.englishElement.hidden = !view.state.isEnglishVisible;
+  view.showEnglishButton.textContent = view.state.isEnglishVisible ? "英語非表示" : "英語表示";
+  view.showEnglishButton.disabled = false;
+  view.nextButton.disabled = current >= total;
 }
 
-function setPhraseMessage(view, message) {
-  view.labelElement.textContent = "日本語";
-  view.textElement.textContent = message;
+function resetView(view) {
+  view.state.phrases = [];
+  view.state.currentIndex = 0;
+  view.state.isEnglishVisible = false;
+  view.state.hasPhrase = false;
+  renderPhrase(view);
 }
 
 async function loadPhrase(screenName) {
   const view = phraseViews[screenName];
+  if (!view) return;
 
-  if (!view) {
-    return;
-  }
-
-  setPhraseMessage(view, view.loadingMessage);
-  view.metaElement.textContent = "";
+  resetView(view);
 
   try {
     const response = await fetch(view.endpoint);
@@ -109,31 +95,31 @@ async function loadPhrase(screenName) {
       throw new Error(data.detail || `HTTP ${response.status}`);
     }
 
-    view.state.japaneseText = data.japanese_text;
-    view.state.englishText = data.english_text;
-    view.state.createdAt = data.created_at;
-    view.state.visibleLanguage = "japanese";
-    view.state.hasPhrase = true;
-
+    view.state.phrases = Array.isArray(data) ? data : [];
+    view.state.currentIndex = 0;
+    view.state.isEnglishVisible = false;
+    view.state.hasPhrase = view.state.phrases.length > 0;
     renderPhrase(view);
-
-    const createdAtText = formatCreatedAt(data.created_at);
-    view.metaElement.textContent = createdAtText
-      ? `作成日時: ${createdAtText}`
-      : "";
   } catch (error) {
-    view.state.japaneseText = "";
-    view.state.englishText = "";
-    view.state.createdAt = "";
-    view.state.visibleLanguage = "japanese";
-    view.state.hasPhrase = false;
-    setPhraseMessage(
-      view,
-      `取得できませんでした: ${error.message}`,
-    );
-    view.metaElement.textContent = "";
-    renderPhrase(view);
+    resetView(view);
   }
+}
+
+function toggleEnglish(view) {
+  if (!view.state.hasPhrase) return;
+  view.state.isEnglishVisible = !view.state.isEnglishVisible;
+  renderPhrase(view);
+}
+
+function showNextPhrase(view) {
+  if (!view.state.hasPhrase) return;
+
+  const nextIndex = view.state.currentIndex + 1;
+  if (nextIndex >= view.state.phrases.length) return;
+
+  view.state.currentIndex = nextIndex;
+  view.state.isEnglishVisible = false;
+  renderPhrase(view);
 }
 
 function switchScreen(screenName) {
@@ -162,19 +148,14 @@ async function submitPhrases() {
     return;
   }
 
-  result.textContent = "Submitting...";
+  result.textContent = "";
   submitButton.disabled = true;
 
   try {
     const response = await fetch("http://127.0.0.1:8000/api/phrases", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        japanese,
-        english,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ japanese, english }),
     });
 
     const data = await response.json();
@@ -183,7 +164,7 @@ async function submitPhrases() {
       throw new Error(data.detail || `HTTP ${response.status}`);
     }
 
-    result.textContent = `Submitted: phrase #${data.phrase_id}`;
+    result.textContent = "";
     japaneseInput.value = "";
     englishInput.value = "";
   } catch (error) {
@@ -194,21 +175,12 @@ async function submitPhrases() {
 }
 
 screenButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    switchScreen(button.dataset.screenTarget);
-  });
+  button.addEventListener("click", () => switchScreen(button.dataset.screenTarget));
 });
 
 Object.values(phraseViews).forEach((view) => {
-  view.showJapaneseButton.addEventListener("click", () => {
-    view.state.visibleLanguage = "japanese";
-    renderPhrase(view);
-  });
-
-  view.showEnglishButton.addEventListener("click", () => {
-    view.state.visibleLanguage = "english";
-    renderPhrase(view);
-  });
+  view.showEnglishButton.addEventListener("click", () => toggleEnglish(view));
+  view.nextButton.addEventListener("click", () => showNextPhrase(view));
 });
 
 japaneseInput.addEventListener("input", updateSubmitButtonState);

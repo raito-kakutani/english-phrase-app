@@ -12,7 +12,7 @@
         <p class="eyebrow">Menu</p>
         <nav class="menu" aria-label="Screen menu">
           <button class="menu-item is-active" type="button" data-screen-target="phrase-form">
-            フレーズ
+            フレーズ入力
           </button>
           <button class="menu-item" type="button" data-screen-target="today-phrase">
             今日
@@ -34,7 +34,7 @@
             <textarea
               id="japanese-input"
               class="text-input"
-              placeholder="日本語を入力"
+              placeholder="日本語のフレーズを入力"
               rows="8"
             ></textarea>
           </label>
@@ -55,34 +55,25 @@
       </section>
       <section id="today-phrase" class="panel screen" data-screen="today-phrase" hidden>
         <p class="eyebrow">Today</p>
-        <div class="today-header">
-          <h1 class="screen-title">今日のフレーズ</h1>
-          <div class="tab-row" role="tablist" aria-label="Phrase language tabs">
-            <button
-              id="show-japanese-button"
-              class="tab-button is-active"
-              type="button"
-              role="tab"
-              aria-selected="true"
-            >
-              日本語
-            </button>
-            <button
-              id="show-english-button"
-              class="tab-button"
-              type="button"
-              role="tab"
-              aria-selected="false"
-            >
-              英語を表示
-            </button>
+        <div class="input-row">
+          <div class="field">
+            <span class="field-label">日本語</span>
+            <p id="today-phrase-text" class="phrase-text"></p>
+          </div>
+          <div id="today-phrase-english-col" class="field">
+            <span class="field-label">英語</span>
+            <p id="today-phrase-english" class="phrase-text" hidden></p>
           </div>
         </div>
-        <div class="phrase-card">
-          <p id="today-phrase-label" class="phrase-label">日本語</p>
-          <p id="today-phrase-text" class="phrase-text">今日のフレーズを読み込み中...</p>
+        <div class="phrase-actions">
+          <p id="today-phrase-count" class="phrase-count"></p>
+          <button id="show-english-button" class="secondary-button" type="button">
+            英語表示
+          </button>
+          <button id="next-today-phrase-button" class="secondary-button" type="button">
+            次へ
+          </button>
         </div>
-        <p id="today-phrase-meta" class="result" aria-live="polite"></p>
       </section>
       <section
         id="yesterday-phrase"
@@ -91,34 +82,25 @@
         hidden
       >
         <p class="eyebrow">Yesterday</p>
-        <div class="today-header">
-          <h1 class="screen-title">昨日のフレーズ</h1>
-          <div class="tab-row" role="tablist" aria-label="Yesterday phrase language tabs">
-            <button
-              id="show-yesterday-japanese-button"
-              class="tab-button is-active"
-              type="button"
-              role="tab"
-              aria-selected="true"
-            >
-              日本語
-            </button>
-            <button
-              id="show-yesterday-english-button"
-              class="tab-button"
-              type="button"
-              role="tab"
-              aria-selected="false"
-            >
-              英語を表示
-            </button>
+        <div class="input-row">
+          <div class="field">
+            <span class="field-label">日本語</span>
+            <p id="yesterday-phrase-text" class="phrase-text"></p>
+          </div>
+          <div id="yesterday-phrase-english-col" class="field">
+            <span class="field-label">英語</span>
+            <p id="yesterday-phrase-english" class="phrase-text" hidden></p>
           </div>
         </div>
-        <div class="phrase-card">
-          <p id="yesterday-phrase-label" class="phrase-label">日本語</p>
-          <p id="yesterday-phrase-text" class="phrase-text">昨日のフレーズを読み込み中...</p>
+        <div class="phrase-actions">
+          <p id="yesterday-phrase-count" class="phrase-count"></p>
+          <button id="show-yesterday-english-button" class="secondary-button" type="button">
+            英語表示
+          </button>
+          <button id="next-yesterday-phrase-button" class="secondary-button" type="button">
+            次へ
+          </button>
         </div>
-        <p id="yesterday-phrase-meta" class="result" aria-live="polite"></p>
       </section>
     </main>
     <script src="./script.js"></script>
