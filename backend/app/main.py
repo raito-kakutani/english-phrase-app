@@ -3,8 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from app.services.phrase_service import (
-    get_today_phrase,
-    get_yesterday_phrase,
+    get_phrases_by_day_offset,
     process_phrase_submission,
 )
 
@@ -39,9 +38,9 @@ def submit_phrases(payload: PhraseSubmission) -> dict[str, int | str]:
 
 
 @app.get("/api/phrases/today")
-def fetch_today_phrase() -> dict[str, int | str | None]:
+def fetch_today_phrase() -> list[dict[str, int | str | None]]:
     try:
-        return get_today_phrase()
+        return get_phrases_by_day_offset(0, "No phrase was created today.")
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except RuntimeError as exc:
@@ -49,9 +48,9 @@ def fetch_today_phrase() -> dict[str, int | str | None]:
 
 
 @app.get("/api/phrases/yesterday")
-def fetch_yesterday_phrase() -> dict[str, int | str | None]:
+def fetch_yesterday_phrase() -> list[dict[str, int | str | None]]:
     try:
-        return get_yesterday_phrase()
+        return get_phrases_by_day_offset(-1, "No phrase was created yesterday.")
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except RuntimeError as exc:
