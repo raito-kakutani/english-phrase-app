@@ -188,3 +188,56 @@ englishInput.addEventListener("input", updateSubmitButtonState);
 submitButton.addEventListener("click", submitPhrases);
 
 updateSubmitButtonState();
+
+const calendarState = (() => {
+  const now = new Date();
+  return { year: now.getFullYear(), month: now.getMonth() };
+})();
+
+function renderCalendar() {
+  const { year, month } = calendarState;
+  const now = new Date();
+  const isCurrentMonth = year === now.getFullYear() && month === now.getMonth();
+  const today = isCurrentMonth ? now.getDate() : -1;
+
+  document.getElementById("calendar-month-label").textContent = `${year}年${month + 1}月`;
+
+  const firstDow = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const container = document.getElementById("calendar-days");
+  container.innerHTML = "";
+
+  for (let i = 0; i < firstDow; i++) {
+    const empty = document.createElement("span");
+    empty.className = "calendar-day is-empty";
+    container.appendChild(empty);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const cell = document.createElement("button");
+    cell.type = "button";
+    cell.className = "calendar-day" + (d === today ? " is-today" : "");
+    cell.textContent = d;
+    container.appendChild(cell);
+  }
+}
+
+document.getElementById("calendar-prev").addEventListener("click", () => {
+  calendarState.month -= 1;
+  if (calendarState.month < 0) {
+    calendarState.month = 11;
+    calendarState.year -= 1;
+  }
+  renderCalendar();
+});
+
+document.getElementById("calendar-next").addEventListener("click", () => {
+  calendarState.month += 1;
+  if (calendarState.month > 11) {
+    calendarState.month = 0;
+    calendarState.year += 1;
+  }
+  renderCalendar();
+});
+
+renderCalendar();

@@ -4,7 +4,9 @@ from app.db import create_connection
 
 DEFAULT_USER_ID = 1
 
-
+# =====================================================
+# 指定した日付のフレーズ取得処理
+# =====================================================
 def get_phrases_by_day_offset(
     day_offset: int,
     empty_message: str,
