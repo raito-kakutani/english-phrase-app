@@ -21,6 +21,23 @@
             昨日
           </button>
         </nav>
+        <div class="calendar">
+          <div class="calendar-header">
+            <button id="calendar-prev" class="calendar-nav" type="button" aria-label="前月">&#8249;</button>
+            <span id="calendar-month-label" class="calendar-month"></span>
+            <button id="calendar-next" class="calendar-nav" type="button" aria-label="翌月">&#8250;</button>
+          </div>
+          <div class="calendar-grid">
+            <span class="calendar-dow">日</span>
+            <span class="calendar-dow">月</span>
+            <span class="calendar-dow">火</span>
+            <span class="calendar-dow">水</span>
+            <span class="calendar-dow">木</span>
+            <span class="calendar-dow">金</span>
+            <span class="calendar-dow">土</span>
+          </div>
+          <div id="calendar-days" class="calendar-grid"></div>
+        </div>
       </aside>
       <section
         id="phrase-form"
