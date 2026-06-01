@@ -5,9 +5,20 @@ const result = document.getElementById("result");
 const screenButtons = document.querySelectorAll("[data-screen-target]");
 const screens = document.querySelectorAll("[data-screen]");
 
+function toDateStr(date) {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+const _now = new Date();
+const _yesterday = new Date(_now);
+_yesterday.setDate(_now.getDate() - 1);
+
 const phraseViews = {
   "today-phrase": {
-    endpoint: "http://127.0.0.1:8000/api/phrases/today",
+    endpoint: `http://127.0.0.1:8000/api/phrases/date/${toDateStr(_now)}`,
     countElement: document.getElementById("today-phrase-count"),
     japaneseElement: document.getElementById("today-phrase-text"),
     englishElement: document.getElementById("today-phrase-english"),
@@ -21,12 +32,26 @@ const phraseViews = {
     },
   },
   "yesterday-phrase": {
-    endpoint: "http://127.0.0.1:8000/api/phrases/yesterday",
+    endpoint: `http://127.0.0.1:8000/api/phrases/date/${toDateStr(_yesterday)}`,
     countElement: document.getElementById("yesterday-phrase-count"),
     japaneseElement: document.getElementById("yesterday-phrase-text"),
     englishElement: document.getElementById("yesterday-phrase-english"),
     showEnglishButton: document.getElementById("show-yesterday-english-button"),
     nextButton: document.getElementById("next-yesterday-phrase-button"),
+    state: {
+      phrases: [],
+      currentIndex: 0,
+      isEnglishVisible: false,
+      hasPhrase: false,
+    },
+  },
+  "date-phrase": {
+    endpoint: null,
+    countElement: document.getElementById("date-phrase-count"),
+    japaneseElement: document.getElementById("date-phrase-text"),
+    englishElement: document.getElementById("date-phrase-english"),
+    showEnglishButton: document.getElementById("show-date-english-button"),
+    nextButton: document.getElementById("next-date-phrase-button"),
     state: {
       phrases: [],
       currentIndex: 0,
@@ -83,7 +108,7 @@ function resetView(view) {
 
 async function loadPhrase(screenName) {
   const view = phraseViews[screenName];
-  if (!view) return;
+  if (!view || !view.endpoint) return;
 
   resetView(view);
 
@@ -191,7 +216,13 @@ updateSubmitButtonState();
 
 const calendarState = (() => {
   const now = new Date();
-  return { year: now.getFullYear(), month: now.getMonth() };
+  return {
+    year: now.getFullYear(),
+    month: now.getMonth(),
+    selectedYear: null,
+    selectedMonth: null,
+    selectedDay: null,
+  };
 })();
 
 function renderCalendar() {
@@ -216,8 +247,34 @@ function renderCalendar() {
   for (let d = 1; d <= daysInMonth; d++) {
     const cell = document.createElement("button");
     cell.type = "button";
-    cell.className = "calendar-day" + (d === today ? " is-today" : "");
+    const isToday = d === today;
+    const isSelected =
+      calendarState.selectedYear === year &&
+      calendarState.selectedMonth === month &&
+      calendarState.selectedDay === d;
+    cell.className =
+      "calendar-day" +
+      (isToday ? " is-today" : "") +
+      (isSelected ? " is-selected" : "");
     cell.textContent = d;
+
+    cell.addEventListener("click", () => {
+      const mm = String(month + 1).padStart(2, "0");
+      const dd = String(d).padStart(2, "0");
+      const dateStr = `${year}-${mm}-${dd}`;
+
+      calendarState.selectedYear = year;
+      calendarState.selectedMonth = month;
+      calendarState.selectedDay = d;
+
+      phraseViews["date-phrase"].endpoint = `http://127.0.0.1:8000/api/phrases/date/${dateStr}`;
+      document.getElementById("date-phrase-eyebrow").textContent =
+        `${year}年${month + 1}月${d}日`;
+
+      switchScreen("date-phrase");
+      renderCalendar();
+    });
+
     container.appendChild(cell);
   }
 }

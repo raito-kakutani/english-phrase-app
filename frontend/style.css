@@ -65,6 +65,11 @@ body {
   border-color: #1d5c4d;
 }
 
+.menu-item--date {
+  pointer-events: none;
+  cursor: default;
+}
+
 .eyebrow {
   margin: 0 0 8px;
   font-size: 12px;
@@ -244,13 +249,19 @@ textarea.text-input {
   cursor: pointer;
 }
 
-.calendar-day:hover:not(.is-today) {
+.calendar-day:hover:not(.is-today):not(.is-selected) {
   background: rgba(29, 92, 77, 0.1);
 }
 
 .calendar-day.is-today {
   color: #fff;
   background: #1d5c4d;
+  font-weight: 700;
+}
+
+.calendar-day.is-selected {
+  color: #fff;
+  background: #355067;
   font-weight: 700;
 }
 
