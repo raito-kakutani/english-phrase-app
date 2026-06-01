@@ -4,11 +4,8 @@ from app.db import create_connection
 
 DEFAULT_USER_ID = 1
 
-# =====================================================
-# 指定した日付のフレーズ取得処理
-# =====================================================
-def get_phrases_by_day_offset(
-    day_offset: int,
+def get_phrases_by_date(
+    date_str: str,
     empty_message: str,
 ) -> list[dict[str, int | str | None]]:
     connection = create_connection()
@@ -17,14 +14,14 @@ def get_phrases_by_day_offset(
     try:
         cursor = connection.cursor(dictionary=True)
         cursor.execute(
-            """
+            f"""
             SELECT id, japanese_text, english_text, created_at
             FROM phrases
             WHERE user_id = %s
-              AND DATE(created_at) = DATE_ADD(CURRENT_DATE(), INTERVAL %s DAY)
+              AND DATE(created_at) = %s
             ORDER BY created_at ASC, id ASC
             """,
-            (DEFAULT_USER_ID, day_offset),
+            (DEFAULT_USER_ID, date_str),
         )
         phrases = cursor.fetchall()
 

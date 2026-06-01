@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from app.services.phrase_save import process_phrase_submission
-from app.services.phrase_get import get_phrases_by_day_offset
+from app.services.phrase_get import get_phrases_by_date
 
 
 app = FastAPI(title="English Phrase App API")
@@ -35,20 +35,11 @@ def submit_phrases(payload: PhraseSubmission) -> dict[str, int | str]:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 
-@app.get("/api/phrases/today")
-def fetch_today_phrase() -> list[dict[str, int | str | None]]:
-    try:
-        return get_phrases_by_day_offset(0, "No phrase was created today.")
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-    except RuntimeError as exc:
-        raise HTTPException(status_code=500, detail=str(exc)) from exc
 
-
-@app.get("/api/phrases/yesterday")
-def fetch_yesterday_phrase() -> list[dict[str, int | str | None]]:
+@app.get("/api/phrases/date/{date}")
+def fetch_phrase_by_date(date: str) -> list[dict[str, int | str | None]]:
     try:
-        return get_phrases_by_day_offset(-1, "No phrase was created yesterday.")
+        return get_phrases_by_date(date, f"{date}のフレーズはありません。")
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except RuntimeError as exc:
