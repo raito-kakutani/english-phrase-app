@@ -39,3 +39,16 @@ python -m http.server 3000
 ```
 
 Frontend URL: `http://127.0.0.1:3000`
+
+# AWS
+## EC2接続
+ssh -i "C:\Users\81802\english-phrase-app-key.pem" ubuntu@15.152.110.6
+
+## バックエンド移動
+cd ~/english-phrase-app/backend
+
+## 仮想県境有効化
+source venv/bin/activate
+
+## FASTAPI起動
+uvicorn app.main:app --host 0.0.0.0 --port 8000
