@@ -42,7 +42,7 @@ Frontend URL: `http://127.0.0.1:3000`
 
 # AWS
 ## EC2接続
-ssh -i "C:\Users\81802\english-phrase-app-key.pem" ubuntu@15.152.110.6
+ssh -i "C:\Users\81802\english-phrase-app-key.pem" ubuntu@56.155.34.145
 
 ## バックエンド移動
 cd ~/english-phrase-app/backend
