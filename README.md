@@ -29,6 +29,14 @@ Backend URL: `http://127.0.0.1:8000`
 - This environment currently uses system site packages because `pip` bootstrap failed during `venv` creation on this machine.
 - If you want to inspect the venv Python directly: `.\.venv-dev\Scripts\python.exe --version`
 
+### Testing
+
+```powershell
+cd backend
+.\venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\venv\Scripts\python.exe -m pytest
+```
+
 ## Frontend setup
 
 The frontend is plain static files. Start a local web server from `frontend`.
