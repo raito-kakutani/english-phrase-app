@@ -18,7 +18,7 @@ _yesterday.setDate(_now.getDate() - 1);
 
 const phraseViews = {
   "today-phrase": {
-    endpoint: `http://127.0.0.1:8000/api/phrases/date/${toDateStr(_now)}`,
+    endpoint: `/api/phrases/date/${toDateStr(_now)}`,
     countElement: document.getElementById("today-phrase-count"),
     japaneseElement: document.getElementById("today-phrase-text"),
     englishElement: document.getElementById("today-phrase-english"),
@@ -32,7 +32,7 @@ const phraseViews = {
     },
   },
   "yesterday-phrase": {
-    endpoint: `http://127.0.0.1:8000/api/phrases/date/${toDateStr(_yesterday)}`,
+    endpoint: `/api/phrases/date/${toDateStr(_yesterday)}`,
     countElement: document.getElementById("yesterday-phrase-count"),
     japaneseElement: document.getElementById("yesterday-phrase-text"),
     englishElement: document.getElementById("yesterday-phrase-english"),
@@ -177,7 +177,7 @@ async function submitPhrases() {
   submitButton.disabled = true;
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/api/phrases", {
+    const response = await fetch("/api/phrases", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ japanese, english }),
@@ -267,7 +267,7 @@ function renderCalendar() {
       calendarState.selectedMonth = month;
       calendarState.selectedDay = d;
 
-      phraseViews["date-phrase"].endpoint = `http://127.0.0.1:8000/api/phrases/date/${dateStr}`;
+      phraseViews["date-phrase"].endpoint = `/api/phrases/date/${dateStr}`;
       document.getElementById("date-phrase-eyebrow").textContent =
         `${year}年${month + 1}月${d}日`;
 
