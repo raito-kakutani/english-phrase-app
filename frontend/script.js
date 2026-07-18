@@ -193,7 +193,8 @@ async function submitPhrases() {
     japaneseInput.value = "";
     englishInput.value = "";
   } catch (error) {
-    result.textContent = `Submit failed: ${error.message}`;
+    console.error(error);
+    result.textContent = "フレーズ登録に失敗しました。";
   } finally {
     updateSubmitButtonState();
   }
