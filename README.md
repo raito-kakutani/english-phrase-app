@@ -1,19 +1,19 @@
 # english-phrase-app
 
-English phrase learning app.
+英語フレーズ学習アプリ。
 
-## Project notes
+## プロジェクトメモ
 
-- See `ISSUES.md` for pending implementation items, including planned MySQL support.
+- 未対応の実装項目(MySQL対応の予定を含む)は `ISSUES.md` を参照。
 
-## Structure
+## 構成
 
 - `frontend`
 - `backend`
 
-## Backend setup
+## バックエンドのセットアップ
 
-The repository now includes a local venv folder at `backend/.venv-dev`.
+このリポジトリには `backend/.venv-dev` にローカルのvenvフォルダが含まれている。
 
 ### PowerShell
 
@@ -22,14 +22,14 @@ cd backend
 .\.venv-dev\Scripts\python.exe -m uvicorn app.main:app --reload
 ```
 
-Backend URL: `http://127.0.0.1:8000`
+バックエンドURL: `http://127.0.0.1:8000`
 
-### Notes
+### 補足
 
-- This environment currently uses system site packages because `pip` bootstrap failed during `venv` creation on this machine.
-- If you want to inspect the venv Python directly: `.\.venv-dev\Scripts\python.exe --version`
+- このマシンでは`venv`作成時に`pip`のブートストラップが失敗したため、現在この環境ではシステムのsite-packagesを使用している。
+- venvのPythonを直接確認したい場合: `.\.venv-dev\Scripts\python.exe --version`
 
-### Testing
+### テスト
 
 ```powershell
 cd backend
@@ -37,16 +37,16 @@ cd backend
 .\venv\Scripts\python.exe -m pytest
 ```
 
-## Frontend setup
+## フロントエンドのセットアップ
 
-The frontend is plain static files. Start a local web server from `frontend`.
+フロントエンドは通常の静的ファイル。`frontend`からローカルWebサーバーを起動する。
 
 ```powershell
 cd frontend
 python -m http.server 3000
 ```
 
-Frontend URL: `http://127.0.0.1:3000`
+フロントエンドURL: `http://127.0.0.1:3000`
 
 # AWS
 ## EC2接続
@@ -55,8 +55,8 @@ ssh -i "C:\Users\81802\english-phrase-app-key.pem" ubuntu@56.155.34.145
 ## バックエンド移動
 cd ~/english-phrase-app/backend
 
-## 仮想県境有効化
+## 仮想環境有効化
 source venv/bin/activate
 
-## FASTAPI起動
+## FastAPI起動
 uvicorn app.main:app --host 0.0.0.0 --port 8000
