@@ -23,6 +23,7 @@ const phraseViews = {
     japaneseElement: document.getElementById("today-phrase-text"),
     englishElement: document.getElementById("today-phrase-english"),
     showEnglishButton: document.getElementById("show-english-button"),
+    prevButton: document.getElementById("prev-today-phrase-button"),
     nextButton: document.getElementById("next-today-phrase-button"),
     state: {
       phrases: [],
@@ -37,6 +38,7 @@ const phraseViews = {
     japaneseElement: document.getElementById("yesterday-phrase-text"),
     englishElement: document.getElementById("yesterday-phrase-english"),
     showEnglishButton: document.getElementById("show-yesterday-english-button"),
+    prevButton: document.getElementById("prev-yesterday-phrase-button"),
     nextButton: document.getElementById("next-yesterday-phrase-button"),
     state: {
       phrases: [],
@@ -51,6 +53,7 @@ const phraseViews = {
     japaneseElement: document.getElementById("date-phrase-text"),
     englishElement: document.getElementById("date-phrase-english"),
     showEnglishButton: document.getElementById("show-date-english-button"),
+    prevButton: document.getElementById("prev-date-phrase-button"),
     nextButton: document.getElementById("next-date-phrase-button"),
     state: {
       phrases: [],
@@ -81,6 +84,7 @@ function renderPhrase(view) {
     view.englishElement.hidden = true;
     view.showEnglishButton.textContent = "英語表示";
     view.showEnglishButton.disabled = true;
+    view.prevButton.disabled = true;
     view.nextButton.disabled = true;
     return;
   }
@@ -95,6 +99,7 @@ function renderPhrase(view) {
   view.englishElement.hidden = !view.state.isEnglishVisible;
   view.showEnglishButton.textContent = view.state.isEnglishVisible ? "英語非表示" : "英語表示";
   view.showEnglishButton.disabled = false;
+  view.prevButton.disabled = current <= 1;
   view.nextButton.disabled = current >= total;
 }
 
@@ -143,6 +148,17 @@ function showNextPhrase(view) {
   if (nextIndex >= view.state.phrases.length) return;
 
   view.state.currentIndex = nextIndex;
+  view.state.isEnglishVisible = false;
+  renderPhrase(view);
+}
+
+function showPrevPhrase(view) {
+  if (!view.state.hasPhrase) return;
+
+  const prevIndex = view.state.currentIndex - 1;
+  if (prevIndex < 0) return;
+
+  view.state.currentIndex = prevIndex;
   view.state.isEnglishVisible = false;
   renderPhrase(view);
 }
@@ -206,6 +222,7 @@ screenButtons.forEach((button) => {
 
 Object.values(phraseViews).forEach((view) => {
   view.showEnglishButton.addEventListener("click", () => toggleEnglish(view));
+  view.prevButton.addEventListener("click", () => showPrevPhrase(view));
   view.nextButton.addEventListener("click", () => showNextPhrase(view));
 });
 
