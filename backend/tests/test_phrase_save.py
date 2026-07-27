@@ -19,7 +19,7 @@ def test_rejects_blank_japanese(monkeypatch):
     monkeypatch.setattr(phrase_save, "create_connection", connect)
 
     with pytest.raises(ValueError):
-        phrase_save.process_phrase_submission(japanese="   ", english="hello")
+        phrase_save.process_phrase_submission(japanese="   ", english="hello", user_id=1)
 
     connect.assert_not_called()
 
@@ -29,7 +29,7 @@ def test_rejects_blank_english(monkeypatch):
     monkeypatch.setattr(phrase_save, "create_connection", connect)
 
     with pytest.raises(ValueError):
-        phrase_save.process_phrase_submission(japanese="こんにちは", english="   ")
+        phrase_save.process_phrase_submission(japanese="こんにちは", english="   ", user_id=1)
 
     connect.assert_not_called()
 
@@ -41,14 +41,15 @@ def test_saves_trimmed_phrase_and_returns_id(monkeypatch):
     result = phrase_save.process_phrase_submission(
         japanese="  こんにちは  ",
         english="  hello  ",
+        user_id=1,
     )
 
-    assert result == {"status": "saved", "phrase_id": 42, "user_id": phrase_save.DEFAULT_USER_ID}
+    assert result == {"status": "saved", "phrase_id": 42, "user_id": 1}
 
     cursor.execute.assert_called_once()
     sql, params = cursor.execute.call_args.args
     assert "INSERT INTO phrases" in sql
-    assert params == (phrase_save.DEFAULT_USER_ID, "こんにちは", "hello")
+    assert params == (1, "こんにちは", "hello")
 
     connection.commit.assert_called_once()
     cursor.close.assert_called_once()
@@ -61,7 +62,7 @@ def test_wraps_connector_errors_and_still_closes(monkeypatch):
     monkeypatch.setattr(phrase_save, "create_connection", lambda: connection)
 
     with pytest.raises(RuntimeError, match="Failed to save phrase"):
-        phrase_save.process_phrase_submission(japanese="こんにちは", english="hello")
+        phrase_save.process_phrase_submission(japanese="こんにちは", english="hello", user_id=1)
 
     cursor.close.assert_called_once()
     connection.close.assert_called_once()

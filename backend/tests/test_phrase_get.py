@@ -28,7 +28,7 @@ def test_returns_phrases_with_isoformatted_dates(monkeypatch):
     connection, cursor = make_connection(rows)
     monkeypatch.setattr(phrase_get, "create_connection", lambda: connection)
 
-    result = phrase_get.get_phrases_by_date("2026-07-05", "no phrases")
+    result = phrase_get.get_phrases_by_date("2026-07-05", "no phrases", user_id=1)
 
     assert result == [
         {
@@ -41,7 +41,7 @@ def test_returns_phrases_with_isoformatted_dates(monkeypatch):
 
     sql, params = cursor.execute.call_args.args
     assert "FROM phrases" in sql
-    assert params == (phrase_get.DEFAULT_USER_ID, "2026-07-05")
+    assert params == (1, "2026-07-05")
     cursor.close.assert_called_once()
     connection.close.assert_called_once()
 
@@ -51,7 +51,7 @@ def test_handles_missing_created_at(monkeypatch):
     connection, _ = make_connection(rows)
     monkeypatch.setattr(phrase_get, "create_connection", lambda: connection)
 
-    result = phrase_get.get_phrases_by_date("2026-07-05", "no phrases")
+    result = phrase_get.get_phrases_by_date("2026-07-05", "no phrases", user_id=1)
 
     assert result[0]["created_at"] is None
 
@@ -61,7 +61,7 @@ def test_raises_value_error_when_no_phrases(monkeypatch):
     monkeypatch.setattr(phrase_get, "create_connection", lambda: connection)
 
     with pytest.raises(ValueError, match="no phrases for this date"):
-        phrase_get.get_phrases_by_date("2026-07-05", "no phrases for this date")
+        phrase_get.get_phrases_by_date("2026-07-05", "no phrases for this date", user_id=1)
 
 
 def test_wraps_connector_errors_and_still_closes(monkeypatch):
@@ -70,7 +70,7 @@ def test_wraps_connector_errors_and_still_closes(monkeypatch):
     monkeypatch.setattr(phrase_get, "create_connection", lambda: connection)
 
     with pytest.raises(RuntimeError, match="Failed to load phrase"):
-        phrase_get.get_phrases_by_date("2026-07-05", "no phrases")
+        phrase_get.get_phrases_by_date("2026-07-05", "no phrases", user_id=1)
 
     cursor.close.assert_called_once()
     connection.close.assert_called_once()
