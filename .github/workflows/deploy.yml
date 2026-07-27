@@ -17,4 +17,5 @@ jobs:
           script: |
             cd ~/english-phrase-app
             git pull
+            backend/venv/bin/pip install -r backend/requirements.txt
             sudo systemctl restart myapp
