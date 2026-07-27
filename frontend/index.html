@@ -7,7 +7,77 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <main class="app">
+    <div id="auth-view" class="auth-view" hidden>
+      <section class="panel auth-panel">
+        <p class="eyebrow">English Phrase App</p>
+
+        <form id="login-form" class="auth-form">
+          <h1 class="auth-title">ログイン</h1>
+          <label class="field">
+            <span class="field-label">メールアドレス</span>
+            <input
+              id="login-email"
+              class="text-input"
+              type="email"
+              autocomplete="email"
+              required
+            />
+          </label>
+          <label class="field">
+            <span class="field-label">パスワード</span>
+            <input
+              id="login-password"
+              class="text-input"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+          </label>
+          <p id="login-error" class="auth-error" aria-live="polite"></p>
+          <div class="actions">
+            <button id="login-submit" type="submit">ログイン</button>
+          </div>
+          <p class="auth-switch">
+            アカウントをお持ちでない方は
+            <button id="show-signup-button" class="link-button" type="button">新規登録</button>
+          </p>
+        </form>
+
+        <form id="signup-form" class="auth-form" hidden>
+          <h1 class="auth-title">新規登録</h1>
+          <label class="field">
+            <span class="field-label">メールアドレス</span>
+            <input
+              id="signup-email"
+              class="text-input"
+              type="email"
+              autocomplete="email"
+              required
+            />
+          </label>
+          <label class="field">
+            <span class="field-label">パスワード（8文字以上）</span>
+            <input
+              id="signup-password"
+              class="text-input"
+              type="password"
+              autocomplete="new-password"
+              minlength="8"
+              required
+            />
+          </label>
+          <p id="signup-error" class="auth-error" aria-live="polite"></p>
+          <div class="actions">
+            <button id="signup-submit" type="submit">登録する</button>
+          </div>
+          <p class="auth-switch">
+            すでにアカウントをお持ちの方は
+            <button id="show-login-button" class="link-button" type="button">ログイン</button>
+          </p>
+        </form>
+      </section>
+    </div>
+    <main id="app-view" class="app" hidden>
       <aside class="sidebar">
         <p class="eyebrow">Menu</p>
         <nav class="menu" aria-label="Screen menu">
@@ -24,6 +94,7 @@
             日付
           </button>
         </nav>
+        <button id="logout-button" class="logout-button" type="button">ログアウト</button>
         <div class="calendar">
           <div class="calendar-header">
             <button id="calendar-prev" class="calendar-nav" type="button" aria-label="前月">&#8249;</button>

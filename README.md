@@ -4,7 +4,7 @@
 
 ## デモ
 
-- URL:
+- URL:https://englishphrase.app/
 
 ## 主な機能
 

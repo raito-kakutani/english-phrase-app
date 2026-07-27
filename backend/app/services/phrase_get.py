@@ -2,11 +2,11 @@ import mysql.connector
 
 from app.db import create_connection
 
-DEFAULT_USER_ID = 1
 
 def get_phrases_by_date(
     date_str: str,
     empty_message: str,
+    user_id: int,
 ) -> list[dict[str, int | str | None]]:
     connection = create_connection()
     cursor = None
@@ -21,7 +21,7 @@ def get_phrases_by_date(
               AND DATE(created_at) = %s
             ORDER BY created_at ASC, id ASC
             """,
-            (DEFAULT_USER_ID, date_str),
+            (user_id, date_str),
         )
         phrases = cursor.fetchall()
 

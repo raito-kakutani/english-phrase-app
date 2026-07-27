@@ -270,6 +270,77 @@ textarea.text-input {
   pointer-events: none;
 }
 
+.auth-view {
+  width: min(100%, 480px);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  margin: 0 auto;
+}
+
+.auth-panel {
+  width: 100%;
+}
+
+.auth-title {
+  margin: 0 0 20px;
+  font-size: 1.4rem;
+}
+
+.auth-form[hidden] {
+  display: none;
+}
+
+.auth-form .field {
+  margin-bottom: 16px;
+}
+
+.auth-error {
+  margin: 0 0 12px;
+  min-height: 1.4em;
+  font-weight: 700;
+  color: #b3311f;
+}
+
+.auth-form .actions {
+  justify-content: stretch;
+}
+
+.auth-form .actions button {
+  width: 100%;
+}
+
+.auth-switch {
+  margin: 20px 0 0;
+  text-align: center;
+  color: #355067;
+}
+
+.link-button {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  color: #1d5c4d;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.logout-button {
+  width: 100%;
+  margin-top: 10px;
+  border: 1px solid rgba(53, 80, 103, 0.16);
+  border-radius: 14px;
+  padding: 12px 16px;
+  font: inherit;
+  font-weight: 600;
+  color: #355067;
+  background: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+}
+
 @media (max-width: 640px) {
   .app {
     grid-template-columns: 1fr;

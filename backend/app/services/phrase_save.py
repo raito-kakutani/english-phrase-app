@@ -2,10 +2,8 @@ import mysql.connector
 
 from app.db import create_connection
 
-DEFAULT_USER_ID = 1
 
-
-def process_phrase_submission(japanese: str, english: str) -> dict[str, int | str]:
+def process_phrase_submission(japanese: str, english: str, user_id: int) -> dict[str, int | str]:
     normalized_japanese = japanese.strip()
     normalized_english = english.strip()
 
@@ -22,14 +20,14 @@ def process_phrase_submission(japanese: str, english: str) -> dict[str, int | st
             INSERT INTO phrases (user_id, japanese_text, english_text)
             VALUES (%s, %s, %s)
             """,
-            (DEFAULT_USER_ID, normalized_japanese, normalized_english),
+            (user_id, normalized_japanese, normalized_english),
         )
         connection.commit()
 
         return {
             "status": "saved",
             "phrase_id": cursor.lastrowid,
-            "user_id": DEFAULT_USER_ID,
+            "user_id": user_id,
         }
     except mysql.connector.Error as exc:
         raise RuntimeError(f"Failed to save phrase: {exc}") from exc
