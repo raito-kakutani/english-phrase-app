@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ログイン - English Phrase App</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="auth-view">
+      <section class="panel auth-panel">
+        <p class="eyebrow">English Phrase App</p>
+
+        <form id="login-form" class="auth-form" novalidate>
+          <h1 class="auth-title">ログイン</h1>
+          <label class="field">
+            <span class="field-label">メールアドレス</span>
+            <input
+              id="login-email"
+              class="text-input"
+              type="email"
+              autocomplete="email"
+              required
+            />
+          </label>
+          <label class="field">
+            <span class="field-label">パスワード</span>
+            <input
+              id="login-password"
+              class="text-input"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+          </label>
+          <p id="login-error" class="auth-error" aria-live="polite"></p>
+          <div class="actions">
+            <button id="login-submit" type="submit">ログイン</button>
+          </div>
+          <p class="auth-switch">
+            アカウントをお持ちでない方は
+            <a class="link-button" href="./signup.html">新規登録</a>
+          </p>
+        </form>
+      </section>
+    </div>
+    <script src="./login.js"></script>
+  </body>
+</html>

@@ -288,10 +288,6 @@ textarea.text-input {
   font-size: 1.4rem;
 }
 
-.auth-form[hidden] {
-  display: none;
-}
-
 .auth-form .field {
   margin-bottom: 16px;
 }

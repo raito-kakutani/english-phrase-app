@@ -5,18 +5,7 @@ const result = document.getElementById("result");
 const screenButtons = document.querySelectorAll("[data-screen-target]");
 const screens = document.querySelectorAll("[data-screen]");
 
-const authView = document.getElementById("auth-view");
 const appView = document.getElementById("app-view");
-const loginForm = document.getElementById("login-form");
-const signupForm = document.getElementById("signup-form");
-const loginEmailInput = document.getElementById("login-email");
-const loginPasswordInput = document.getElementById("login-password");
-const loginError = document.getElementById("login-error");
-const signupEmailInput = document.getElementById("signup-email");
-const signupPasswordInput = document.getElementById("signup-password");
-const signupError = document.getElementById("signup-error");
-const showSignupButton = document.getElementById("show-signup-button");
-const showLoginButton = document.getElementById("show-login-button");
 const logoutButton = document.getElementById("logout-button");
 
 function toDateStr(date) {
@@ -78,97 +67,20 @@ const phraseViews = {
   },
 };
 
-function showAppView() {
-  authView.hidden = true;
-  appView.hidden = false;
-}
-
-function showAuthView() {
-  appView.hidden = true;
-  authView.hidden = false;
-  loginForm.hidden = false;
-  signupForm.hidden = true;
-}
-
 function handleUnauthorized() {
-  window.location.reload();
+  window.location.href = "./login.html";
 }
 
 async function checkAuth() {
   try {
     const response = await fetch("/api/auth/me", { credentials: "same-origin" });
     if (response.ok) {
-      showAppView();
+      appView.hidden = false;
     } else {
-      showAuthView();
+      handleUnauthorized();
     }
   } catch (error) {
-    showAuthView();
-  }
-}
-
-async function handleLogin(event) {
-  event.preventDefault();
-  loginError.textContent = "";
-
-  try {
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: loginEmailInput.value.trim(),
-        password: loginPasswordInput.value,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.detail || `HTTP ${response.status}`);
-    }
-
-    window.location.reload();
-  } catch (error) {
-    loginError.textContent = error.message || "ログインに失敗しました。";
-  }
-}
-
-async function handleSignup(event) {
-  event.preventDefault();
-  signupError.textContent = "";
-
-  const email = signupEmailInput.value.trim();
-  const password = signupPasswordInput.value;
-
-  try {
-    const signupResponse = await fetch("/api/auth/signup", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const signupData = await signupResponse.json();
-
-    if (!signupResponse.ok) {
-      throw new Error(signupData.detail || `HTTP ${signupResponse.status}`);
-    }
-
-    const loginResponse = await fetch("/api/auth/login", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (!loginResponse.ok) {
-      throw new Error("登録は完了しましたが、ログインに失敗しました。");
-    }
-
-    window.location.reload();
-  } catch (error) {
-    signupError.textContent = error.message || "新規登録に失敗しました。";
+    handleUnauthorized();
   }
 }
 
@@ -176,7 +88,7 @@ async function handleLogout() {
   try {
     await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
   } finally {
-    window.location.reload();
+    window.location.href = "./login.html";
   }
 }
 
@@ -360,21 +272,7 @@ submitButton.addEventListener("click", submitPhrases);
 
 updateSubmitButtonState();
 
-loginForm.addEventListener("submit", handleLogin);
-signupForm.addEventListener("submit", handleSignup);
 logoutButton.addEventListener("click", handleLogout);
-
-showSignupButton.addEventListener("click", () => {
-  loginError.textContent = "";
-  loginForm.hidden = true;
-  signupForm.hidden = false;
-});
-
-showLoginButton.addEventListener("click", () => {
-  signupError.textContent = "";
-  signupForm.hidden = true;
-  loginForm.hidden = false;
-});
 
 checkAuth();
 
