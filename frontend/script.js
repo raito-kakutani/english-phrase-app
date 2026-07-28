@@ -144,7 +144,6 @@ async function loadPhrase(screenName) {
   if (!view || !view.endpoint) return;
 
   resetView(view);
-  view.japaneseElement.textContent = "フレーズ取得中...";
 
   try {
     const response = await fetch(view.endpoint, { credentials: "same-origin" });
