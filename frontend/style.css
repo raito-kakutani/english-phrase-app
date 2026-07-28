@@ -15,10 +15,19 @@ body {
   min-height: 100vh;
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
   gap: 24px;
   align-items: start;
   padding: 24px;
   margin: 0 auto;
+}
+
+.app-header {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 44px;
 }
 
 .sidebar {
@@ -348,10 +357,6 @@ textarea.text-input {
 }
 
 .logout-button {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 10;
   border: 1px solid rgba(53, 80, 103, 0.16);
   border-radius: 999px;
   padding: 10px 18px;

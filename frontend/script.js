@@ -76,7 +76,6 @@ async function checkAuth() {
     const response = await fetch("/api/auth/me", { credentials: "same-origin" });
     if (response.ok) {
       appView.hidden = false;
-      logoutButton.hidden = false;
     } else {
       handleUnauthorized();
     }
@@ -145,6 +144,7 @@ async function loadPhrase(screenName) {
   if (!view || !view.endpoint) return;
 
   resetView(view);
+  view.japaneseElement.textContent = "フレーズ取得中...";
 
   try {
     const response = await fetch(view.endpoint, { credentials: "same-origin" });
@@ -155,6 +155,12 @@ async function loadPhrase(screenName) {
     }
 
     const data = await response.json();
+
+    if (response.status === 404) {
+      resetView(view);
+      view.japaneseElement.textContent = "フレーズはありません";
+      return;
+    }
 
     if (!response.ok) {
       throw new Error(data.detail || `HTTP ${response.status}`);
