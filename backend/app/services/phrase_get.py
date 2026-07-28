@@ -40,7 +40,7 @@ def get_phrases_by_date(
             for phrase in phrases
         ]
     except mysql.connector.Error as exc:
-        raise RuntimeError(f"Failed to load phrase: {exc}") from exc
+        raise RuntimeError(f"フレーズの取得に失敗しました: {exc}") from exc
     finally:
         if cursor is not None:
             cursor.close()

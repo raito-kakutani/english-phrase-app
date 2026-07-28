@@ -35,7 +35,7 @@ def create_session(user_id: int) -> dict[str, str]:
 
         return {"session_token": session_token, "expires_at": expires_at}
     except mysql.connector.Error as exc:
-        raise RuntimeError(f"Failed to create session: {exc}") from exc
+        raise RuntimeError(f"セッションの作成に失敗しました: {exc}") from exc
     finally:
         if cursor is not None:
             cursor.close()
@@ -66,7 +66,7 @@ def get_user_id_for_token(session_token: str) -> int | None:
 
         return row["user_id"]
     except mysql.connector.Error as exc:
-        raise RuntimeError(f"Failed to verify session: {exc}") from exc
+        raise RuntimeError(f"セッションの確認に失敗しました: {exc}") from exc
     finally:
         if cursor is not None:
             cursor.close()
@@ -85,7 +85,7 @@ def delete_session(session_token: str) -> None:
         )
         connection.commit()
     except mysql.connector.Error as exc:
-        raise RuntimeError(f"Failed to delete session: {exc}") from exc
+        raise RuntimeError(f"セッションの削除に失敗しました: {exc}") from exc
     finally:
         if cursor is not None:
             cursor.close()

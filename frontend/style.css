@@ -134,6 +134,16 @@ textarea.text-input {
   cursor: pointer;
   color: #fff;
   background: #1d5c4d;
+  transition: background-color 0.15s ease;
+}
+
+.actions button:hover {
+  background: #17493d;
+}
+
+.actions button:focus-visible {
+  outline: 3px solid rgba(29, 92, 77, 0.35);
+  outline-offset: 2px;
 }
 
 .phrase-count {
@@ -271,7 +281,7 @@ textarea.text-input {
 }
 
 .auth-view {
-  width: min(100%, 480px);
+  width: min(100%, 360px);
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -309,31 +319,47 @@ textarea.text-input {
 
 .auth-switch {
   margin: 20px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   text-align: center;
   color: #355067;
 }
 
 .link-button {
-  border: 0;
-  background: none;
-  padding: 0;
+  display: inline-block;
+  border: 1.5px solid #1d5c4d;
+  border-radius: 999px;
+  padding: 8px 20px;
   font: inherit;
+  font-size: 0.9rem;
   font-weight: 700;
   color: #1d5c4d;
-  text-decoration: underline;
+  background: transparent;
+  text-decoration: none;
   cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.link-button:hover {
+  background: #1d5c4d;
+  color: #fff;
 }
 
 .logout-button {
-  width: 100%;
-  margin-top: 10px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
   border: 1px solid rgba(53, 80, 103, 0.16);
-  border-radius: 14px;
-  padding: 12px 16px;
+  border-radius: 999px;
+  padding: 10px 18px;
   font: inherit;
   font-weight: 600;
   color: #355067;
   background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 8px 20px rgba(29, 41, 53, 0.12);
   cursor: pointer;
 }
 

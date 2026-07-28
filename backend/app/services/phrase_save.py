@@ -8,7 +8,7 @@ def process_phrase_submission(japanese: str, english: str, user_id: int) -> dict
     normalized_english = english.strip()
 
     if not normalized_japanese or not normalized_english:
-        raise ValueError("Both Japanese and English are required.")
+        raise ValueError("日本語と英語の両方を入力してください。")
 
     connection = create_connection()
     cursor = None
@@ -30,7 +30,7 @@ def process_phrase_submission(japanese: str, english: str, user_id: int) -> dict
             "user_id": user_id,
         }
     except mysql.connector.Error as exc:
-        raise RuntimeError(f"Failed to save phrase: {exc}") from exc
+        raise RuntimeError(f"フレーズの保存に失敗しました: {exc}") from exc
     finally:
         if cursor is not None:
             cursor.close()

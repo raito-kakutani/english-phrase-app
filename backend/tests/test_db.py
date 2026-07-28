@@ -83,5 +83,5 @@ def test_create_connection_wraps_connector_errors(monkeypatch):
 
     monkeypatch.setattr(mysql.connector, "connect", fake_connect)
 
-    with pytest.raises(RuntimeError, match="Failed to connect to MySQL"):
+    with pytest.raises(RuntimeError, match="MySQLへの接続に失敗しました"):
         db.create_connection()

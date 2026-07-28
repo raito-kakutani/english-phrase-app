@@ -76,6 +76,7 @@ async function checkAuth() {
     const response = await fetch("/api/auth/me", { credentials: "same-origin" });
     if (response.ok) {
       appView.hidden = false;
+      logoutButton.hidden = false;
     } else {
       handleUnauthorized();
     }

@@ -19,7 +19,7 @@ def authenticate_user(email: str, password: str) -> dict[str, int | str]:
         )
         user = cursor.fetchone()
     except mysql.connector.Error as exc:
-        raise RuntimeError(f"Failed to authenticate user: {exc}") from exc
+        raise RuntimeError(f"認証処理に失敗しました: {exc}") from exc
     finally:
         if cursor is not None:
             cursor.close()
@@ -28,7 +28,7 @@ def authenticate_user(email: str, password: str) -> dict[str, int | str]:
     if user is None or not bcrypt.checkpw(
         password.encode("utf-8"), user["password_hash"].encode("utf-8")
     ):
-        raise ValueError("Invalid email or password.")
+        raise ValueError("メールアドレスまたはパスワードが正しくありません。")
 
     session = create_session(user["id"])
 

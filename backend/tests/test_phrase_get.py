@@ -69,7 +69,7 @@ def test_wraps_connector_errors_and_still_closes(monkeypatch):
     cursor.execute.side_effect = mysql.connector.Error("syntax error")
     monkeypatch.setattr(phrase_get, "create_connection", lambda: connection)
 
-    with pytest.raises(RuntimeError, match="Failed to load phrase"):
+    with pytest.raises(RuntimeError, match="フレーズの取得に失敗しました"):
         phrase_get.get_phrases_by_date("2026-07-05", "no phrases", user_id=1)
 
     cursor.close.assert_called_once()

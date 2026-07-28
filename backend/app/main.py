@@ -32,7 +32,7 @@ SESSION_COOKIE_NAME = "session_token"
 def get_current_user_id(request: Request) -> int:
     session_token = request.cookies.get(SESSION_COOKIE_NAME)
     if session_token is None:
-        raise HTTPException(status_code=401, detail="Login required.")
+        raise HTTPException(status_code=401, detail="ログインが必要です。")
 
     try:
         user_id = get_user_id_for_token(session_token)
@@ -40,7 +40,7 @@ def get_current_user_id(request: Request) -> int:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
     if user_id is None:
-        raise HTTPException(status_code=401, detail="Login required.")
+        raise HTTPException(status_code=401, detail="ログインが必要です。")
 
     return user_id
 

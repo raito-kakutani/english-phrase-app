@@ -18,10 +18,10 @@ def create_user(
     normalized_email = email.strip().lower()
 
     if not EMAIL_PATTERN.match(normalized_email):
-        raise ValueError("A valid email address is required.")
+        raise ValueError("有効なメールアドレスを入力してください。")
 
     if len(password) < MIN_PASSWORD_LENGTH:
-        raise ValueError(f"Password must be at least {MIN_PASSWORD_LENGTH} characters.")
+        raise ValueError(f"パスワードは{MIN_PASSWORD_LENGTH}文字以上で入力してください。")
 
     password_hash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
@@ -45,9 +45,9 @@ def create_user(
             "email": normalized_email,
         }
     except mysql.connector.IntegrityError as exc:
-        raise ValueError("This email address is already registered.") from exc
+        raise ValueError("このメールアドレスは既に登録されています。") from exc
     except mysql.connector.Error as exc:
-        raise RuntimeError(f"Failed to create user: {exc}") from exc
+        raise RuntimeError(f"ユーザー登録に失敗しました: {exc}") from exc
     finally:
         if cursor is not None:
             cursor.close()

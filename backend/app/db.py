@@ -46,4 +46,4 @@ def create_connection():
             database=_get_setting("MYSQL_DATABASE", "english_app"),
         )
     except mysql.connector.Error as exc:
-        raise RuntimeError(f"Failed to connect to MySQL: {exc}") from exc
+        raise RuntimeError(f"MySQLへの接続に失敗しました: {exc}") from exc

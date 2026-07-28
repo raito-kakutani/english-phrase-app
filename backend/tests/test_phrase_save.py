@@ -61,7 +61,7 @@ def test_wraps_connector_errors_and_still_closes(monkeypatch):
     cursor.execute.side_effect = mysql.connector.Error("duplicate key")
     monkeypatch.setattr(phrase_save, "create_connection", lambda: connection)
 
-    with pytest.raises(RuntimeError, match="Failed to save phrase"):
+    with pytest.raises(RuntimeError, match="フレーズの保存に失敗しました"):
         phrase_save.process_phrase_submission(japanese="こんにちは", english="hello", user_id=1)
 
     cursor.close.assert_called_once()
